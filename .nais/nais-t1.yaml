@@ -2,7 +2,7 @@ apiVersion: nais.io/v1alpha1
 kind: Application
 
 metadata:
-  name: personhendelse-consumer-oebs-t1
+  name: ordre-processor-oebs-t1
   namespace: team-oebs
   labels:
     team: team-oebs
