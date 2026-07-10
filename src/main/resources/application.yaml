@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name : oebs-processor-oebs
+#  datasource:
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    username: ${OEBS_USERNAME}
+#    password: ${OEBS_PASSWORD}
+#    url: ${OEBS_URL}
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#    properties:
+#      jakarta:
+#        persistence:
+#          sharedCache:
+#            mode: ENABLE_SELECTIVE
+#      hibernate:
+#        dialect: org.hibernate.dialect.OracleDialect
+#    show-sql: false
+#    open-in-view: false
+  kafka:
+    client-id: ${NAIS_APP_NAME}
+    consumer:
+      group-id:  ${NAIS_APP_NAME}
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 100
+    listener:
+      ack-mode: record
+    bootstrap-servers: ${KAFKA_BROKERS}
+    properties:
+      security:
+        protocol: SSL
+      ssl:
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        truststore:
+          type: PKCS12 #JKS
+          location: ${KAFKA_TRUSTSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+      schema.registry.url: ${KAFKA_SCHEMA_REGISTRY}
+      basic:
+        auth:
+          credentials:
+            source: USER_INFO
+          user:
+            info: ${KAFKA_SCHEMA_REGISTRY_USER}:${KAFKA_SCHEMA_REGISTRY_PASSWORD}
+    ordre-topic: team-oebs.oebs-ordre.v1

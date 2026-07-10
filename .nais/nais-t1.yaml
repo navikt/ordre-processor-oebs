@@ -1,0 +1,53 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+
+metadata:
+  name: personhendelse-consumer-oebs-t1
+  namespace: team-oebs
+  labels:
+    team: team-oebs
+
+spec:
+  image: {{ image }}
+  port: 8080
+
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: gcp
+    # Temporary Kafka diagnostics. Revert this block after troubleshooting.
+    - name: LOGGING_LEVEL_ORG_APACHE_KAFKA
+      value: DEBUG
+    - name: LOGGING_LEVEL_ORG_APACHE_KAFKA_CLIENTS_CONSUMER_INTERNALS
+      value: TRACE
+    - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_KAFKA
+      value: DEBUG
+    # Keep listeners explicitly enabled so one can be toggled off during isolation tests.
+    - name: APP_KAFKA_NOMSHENDELSE_AUTO_STARTUP
+      value: "true"
+    - name: APP_KAFKA_LIVSHENDELSE_AUTO_STARTUP
+      value: "true"
+
+  replicas:
+    min: 1
+    max: 1
+    cpuThresholdPercentage: 50
+  liveness:
+    path: /internal/isalive
+    initialDelay: 60
+    timeout: 10
+  readiness:
+    path: /internal/isready
+    initialDelay: 60
+    timeout: 10
+  resources:
+    limits:
+      cpu: 768m
+      memory: 768Mi
+    requests:
+      cpu: 200m
+      memory: 512Mi
+  prometheus:
+    enabled: true
+    path: /actuator/prometheus
+  kafka:
+    pool: nav-dev

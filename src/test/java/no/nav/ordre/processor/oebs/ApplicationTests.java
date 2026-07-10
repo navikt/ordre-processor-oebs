@@ -1,10 +1,10 @@
-package no.nav.oebsorderexchange;
+package no.nav.ordre.processor.oebs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OebsOrderExchangeApplicationTests {
+class ApplicationTests {
 
     @Test
     void contextLoads() {

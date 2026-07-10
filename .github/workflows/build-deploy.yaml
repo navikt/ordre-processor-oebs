@@ -15,6 +15,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      packages: read
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
@@ -25,13 +26,35 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
       - name: Build with Maven
         run: mvn clean install
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Push Docker image to GAR
-#        if: github.event_name != 'pull_request' && github.ref_name == 'main'
-#        uses: nais/docker-build-push@31c3a7321909bcb20799fdf46153fec721fd9512
-#        id: docker-build-push
-#        with:
-#          team: team-oebs
+      - name: Push Docker image to GAR
+        if: github.event_name != 'pull_request' && github.ref_name == 'main'
+        uses: nais/docker-build-push@31c3a7321909bcb20799fdf46153fec721fd9512
+        id: docker-build-push
+        with:
+          team: team-oebs
+
+  deploy-t1:
+    name: Deploy to t1
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+
+      - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais-t1.yaml
+          VAR: image=${{ needs.build.outputs.image }}

@@ -1,13 +1,13 @@
-package no.nav.oebsorderexchange;
+package no.nav.ordre.processor.oebs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OebsOrderExchangeApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(OebsOrderExchangeApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }
