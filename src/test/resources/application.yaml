@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name : ordre-processor-oebs
+#  datasource:
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    username: ${OEBS_USERNAME}
+#    password: ${OEBS_PASSWORD}
+#    url: ${OEBS_URL}
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#    properties:
+#      jakarta:
+#        persistence:
+#          sharedCache:
+#            mode: ENABLE_SELECTIVE
+#      hibernate:
+#        dialect: org.hibernate.dialect.OracleDialect
+#    show-sql: false
+#    open-in-view: false
+  kafka:
+    client-id: ordre-processor-oebs
+    consumer:
+      group-id:  ordre-processor-oebs
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 100
+    listener:
+      ack-mode: record
+    bootstrap-servers: localhost:9092
+    properties:
+      security.protocol: plaintext
+      schema.registry.url: http://localhost:8081
+      basic.auth.credentials.source: USER_INFO
+      basic.auth.user.info: mock:mock
+    ordre-topic: team-oebs.oebs-ordre.v1
