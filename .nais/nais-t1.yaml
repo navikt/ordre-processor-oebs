@@ -14,13 +14,6 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: gcp
-    # Temporary Kafka diagnostics. Revert this block after troubleshooting.
-    - name: LOGGING_LEVEL_ORG_APACHE_KAFKA
-      value: DEBUG
-    - name: LOGGING_LEVEL_ORG_APACHE_KAFKA_CLIENTS_CONSUMER_INTERNALS
-      value: TRACE
-    - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_KAFKA
-      value: DEBUG
     # Keep listeners explicitly enabled so one can be toggled off during isolation tests.
     - name: APP_KAFKA_NOMSHENDELSE_AUTO_STARTUP
       value: "true"
@@ -41,7 +34,6 @@ spec:
     timeout: 10
   resources:
     limits:
-      cpu: 768m
       memory: 768Mi
     requests:
       cpu: 200m
