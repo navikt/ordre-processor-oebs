@@ -19,7 +19,7 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConfig {
 
-    @Value("${KAFKA_SCHEMA_REGISTRY:restritry}")
+    @Value("${KAFKA_SCHEMA_REGISTRY:registry}")
     private String schemaRegistryUrl;
 
     @Bean
