@@ -4,23 +4,23 @@ server:
 spring:
   application:
     name : ordre-processor-oebs
-#  datasource:
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    username: ${OEBS_USERNAME}
-#    password: ${OEBS_PASSWORD}
-#    url: ${OEBS_URL}
-#  jpa:
-#    hibernate:
-#      ddl-auto: none
-#    properties:
-#      jakarta:
-#        persistence:
-#          sharedCache:
-#            mode: ENABLE_SELECTIVE
-#      hibernate:
-#        dialect: org.hibernate.dialect.OracleDialect
-#    show-sql: false
-#    open-in-view: false
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: test_user
+    password: test_password
+    url: jdbc:oracle:thin:@localhost:1521:testdb
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+    show-sql: false
+    open-in-view: false
   kafka:
     client-id: ordre-processor-oebs
     consumer:

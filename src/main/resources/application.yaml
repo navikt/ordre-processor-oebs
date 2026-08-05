@@ -19,23 +19,23 @@ management:
 spring:
   application:
     name : oebs-processor-oebs
-#  datasource:
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    username: ${OEBS_USERNAME}
-#    password: ${OEBS_PASSWORD}
-#    url: ${OEBS_URL}
-#  jpa:
-#    hibernate:
-#      ddl-auto: none
-#    properties:
-#      jakarta:
-#        persistence:
-#          sharedCache:
-#            mode: ENABLE_SELECTIVE
-#      hibernate:
-#        dialect: org.hibernate.dialect.OracleDialect
-#    show-sql: false
-#    open-in-view: false
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: ${OEBS_USERNAME}
+    password: ${OEBS_PASSWORD}
+    url: ${ORACLE_URL}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+    show-sql: false
+    open-in-view: false
   kafka:
     client-id: ${NAIS_APP_NAME}
     consumer:
