@@ -23,7 +23,7 @@ public class Listener {
     @KafkaListener(id = "ordrelistener", topics = "${spring.kafka.ordre-topic}")
     public void listen(Ordre ordre) {
         logger.info("Received message: {}", ordre);
-        createOrdreProcedure.executeCreateOrdre(ordre);
+        //createOrdreProcedure.executeCreateOrdre(ordre); todo: Add when procedure is ready
         //todo: Legge til feilhantering
     }
 
