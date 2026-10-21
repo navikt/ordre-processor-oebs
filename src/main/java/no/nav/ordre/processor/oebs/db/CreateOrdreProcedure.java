@@ -48,8 +48,7 @@ public class CreateOrdreProcedure {
 
     public Map<String, Object> createOrdre(Ordre ordre) {
         MapSqlParameterSource inputParams = new MapSqlParameterSource()
-                .addValue("p_fodelsnummer", ordre.getFodselNummer())
-                .addValue(IN_PARAM_ORGID, ordre.getOrdreType());
+                .addValue("p_fodelsnummer", ordre.getFodselNummer());
         return validateKontostrengCall.execute(inputParams);
     }
 }
