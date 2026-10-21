@@ -16,8 +16,8 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
@@ -45,7 +45,8 @@ class ListenerIntegrationTest {
                 .setFodselNummer("01010050000") // syntetisk fødselsnummer
                 .setFormidlerNavn("Test Formidler")
                 .setSaksNummer("SAK-001")
-                //.setRequestId(UUID.randomUUID().toString())
+                .setArtikler(List.of())
+                .setLeveringsInfo("Testlevering")
                 .build();
 
         kafkaTemplate.send("team-oebs.oebs-ordre.v1", ordre).get();
