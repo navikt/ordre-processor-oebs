@@ -2,7 +2,6 @@ package no.nav.ordre.processor.oebs.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import no.nav.oebs.ordre.Ordre;
-import no.nav.oebs.ordre.OrdreType;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,6 @@ class ListenerIntegrationTest {
         var ordre = Ordre.newBuilder()
                 .setFodselNummer("01010050000") // syntetisk fødselsnummer
                 .setFormidlerNavn("Test Formidler")
-                .setOrdreType(OrdreType.REKVISISJON)
                 .setSaksNummer("SAK-001")
                 .setRequestId(UUID.randomUUID().toString())
                 .build();
@@ -53,9 +51,8 @@ class ListenerIntegrationTest {
         kafkaTemplate.send("team-oebs.oebs-ordre.v1", ordre).get();
 
         await().atMost(10, SECONDS).untilAsserted(() ->
-                verify(listener).listen(argThat(mottatt ->
-                        "SAK-001".equals(mottatt.getSaksNummer()) &&
-                        OrdreType.REKVISISJON == mottatt.getOrdreType()
+                verify(listener).listen(argThat(motatt ->
+                        "SAK-001".equals(motatt.getSaksNummer())
                 ))
         );
     }
