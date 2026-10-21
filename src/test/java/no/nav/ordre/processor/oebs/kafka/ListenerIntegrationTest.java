@@ -45,7 +45,7 @@ class ListenerIntegrationTest {
                 .setFodselNummer("01010050000") // syntetisk fødselsnummer
                 .setFormidlerNavn("Test Formidler")
                 .setSaksNummer("SAK-001")
-                .setRequestId(UUID.randomUUID().toString())
+                //.setRequestId(UUID.randomUUID().toString())
                 .build();
 
         kafkaTemplate.send("team-oebs.oebs-ordre.v1", ordre).get();
