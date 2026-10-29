@@ -19,11 +19,6 @@ spec:
       value: gcp
     - name: ORDRE_TOPIC
       value: team-oebs.ordre-oebs-t1.v1
-    # Keep listeners explicitly enabled so one can be toggled off during isolation tests.
-    - name: APP_KAFKA_NOMSHENDELSE_AUTO_STARTUP
-      value: "true"
-    - name: APP_KAFKA_LIVSHENDELSE_AUTO_STARTUP
-      value: "true"
 
   replicas:
     min: 1

@@ -1,0 +1,58 @@
+name: Dependabot deploy verification
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: dependabot-deploy
+  cancel-in-progress: false
+
+jobs:
+  verify-deploy:
+    name: Verify dependabot deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+      id-token: write
+    steps:
+      - name: Skip for non-dependabot PRs
+        if: github.event.pull_request.user.login != 'dependabot[bot]'
+        run: echo "Not a dependabot PR, skipping deploy verification"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          server-id: github
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+
+      - name: Build and test
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        env:
+          MAVEN_USERNAME: ${{ github.actor }}
+          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn -B -U verify -Pcoverage
+
+      - name: Push Docker image to GAR
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        uses: nais/docker-build-push@dd7421d5068057a020ca46ead966c26190c516b1
+        id: docker-build-push
+        with:
+          team: team-oebs
+
+      - name: Deploy to dedicated dependabot workload
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        uses: nais/deploy/actions/deploy@1064e26587ab2794266a35f477387e561899a7ef
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais-dependabot.yaml
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
