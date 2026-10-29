@@ -1,0 +1,12 @@
+
+spring:
+  kafka:
+    client-id: ordre-processor-oebs
+    consumer:
+      group-id:  ordre-processor-oebs
+    bootstrap-servers: localhost:9092
+    properties:
+      security:
+        protocol: plaintext
+      schema.registry.url: http://localhost:8081
+    ordre-topic: lokal-kafka-test
