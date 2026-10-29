@@ -1,0 +1,102 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ordre-processor-oebs-t1
+  namespace: team-oebs
+  labels:
+    team: team-oebs
+spec:
+  groups:
+    - name: ordre-processor-oebs-t1
+      rules:
+        - alert: OrdreProcessorOebsT1InstanceDown
+          expr: kube_deployment_status_replicas_available{namespace="team-oebs", deployment="ordre-processor-oebs-t1"} == 0
+          for: 10m
+          annotations:
+            summary: "ordre-processor-oebs-t1 has no available replicas"
+            consequence: "Order processing is unavailable"
+            action: "Check deploy status and pods with kubectl describe deploy/pod and kubectl logs"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom
+            app: ordre-processor-oebs-t1
+
+        - alert: OrdreProcessorOebsT1KafkaLag
+          expr: sum(kafka_consumergroup_group_lag{group="ordrelistener", topic="team-oebs.ordre-oebs-t1.v1"}) > 100
+          for: 5m
+          annotations:
+            summary: "Kafka consumer lag is high for the order topic ({{ $value }} messages)"
+            consequence: "Orders are being processed with delay"
+            action: "Check that the application is running and processing messages. Check logs for errors."
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 30 minutes during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom
+            app: ordre-processor-oebs-t1
+
+        - alert: OrdreProcessorOebsT1PodRestarts
+          expr: increase(kube_pod_container_status_restarts_total{namespace="team-oebs", container="ordre-processor-oebs-t1"}[1h]) > 3
+          for: 0m
+          annotations:
+            summary: "Pod has restarted {{ $value }} times in the last hour"
+            consequence: "Order processing may be unstable"
+            action: "Check pod logs for the cause of the crashes"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 30 minutes during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom
+            app: ordre-processor-oebs-t1
+
+        - alert: OrdreProcessorOebsT1ErrorLogsHigh
+          expr: increase(logback_events_total{level="error", namespace="team-oebs", container="ordre-processor-oebs-t1"}[5m]) > 3
+          for: 2m
+          annotations:
+            summary: "High rate of ERROR log messages ({{ $value }} in last 5 min)"
+            consequence: "Orders may be failing during processing"
+            action: "Check application logs for the cause of the errors"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 1 hour during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom
+            app: ordre-processor-oebs-t1
+
+        - alert: OrdreProcessorOebsT1JvmHeapPressure
+          expr: >
+            sum by (namespace, pod, container) (jvm_memory_used_bytes{area="heap", namespace="team-oebs", container="ordre-processor-oebs-t1"})
+            /
+            sum by (namespace, pod, container) (jvm_memory_max_bytes{area="heap", namespace="team-oebs", container="ordre-processor-oebs-t1"})
+            > 0.85
+          for: 5m
+          annotations:
+            summary: "JVM heap usage is above 85% ({{ $value | humanizePercentage }})"
+            consequence: "Risk of OutOfMemoryError and pod crash"
+            action: "Check memory usage and consider increasing memory limits"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 1 hour during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom
+            app: ordre-processor-oebs-t1
+
+        - alert: OrdreProcessorOebsT1DatabaseConnectionsPending
+          expr: hikaricp_connections_pending{namespace="team-oebs", container="ordre-processor-oebs-t1"} > 0
+          for: 2m
+          annotations:
+            summary: "Database connections are queued ({{ $value }} pending)"
+            consequence: "Orders cannot be saved to Oracle while connections are pending"
+            action: "Check that the Oracle database is available. Check HikariCP configuration."
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 15 minutes"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom
+            app: ordre-processor-oebs-t1

@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: ordre-processor-oebs-t1
+  namespace: team-oebs
+  labels:
+    alertmanagerConfig: ordre-processor-oebs-t1
+spec:
+  route:
+    receiver: slack-notifications
+    matchers:
+      - name: alert_routing_slack
+        value: team-oebs-alerts-dev
+        matchType: '='
+      - name: app
+        value: ordre-processor-oebs-t1
+        matchType: '='
+    groupBy:
+      - alertname
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 4h
+  receivers:
+    - name: slack-notifications
+      slackConfigs:
+        - apiURL:
+            name: slack-webhook-secret
+            key: webhookUrl
+          channel: "#team-oebs-alerts-dev"
+          sendResolved: true
+          title:  "🚨 {{ .CommonLabels.alertname }}"
+          text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
