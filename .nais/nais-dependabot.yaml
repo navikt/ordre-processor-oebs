@@ -1,0 +1,51 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+
+metadata:
+  name: ordre-processor-oebs-dependabot
+  namespace: team-oebs
+  labels:
+    team: team-oebs
+
+spec:
+  image: {{ image }}
+  port: 8080
+
+  envFrom:
+    - secret: dependabot-oebs-t1
+    - secret: ordre-processor-oebs-dependabot-oracle
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: gcp
+    - name: ORDRE_TOPIC
+      value: team-oebs.ordre-oebs-u1.v1
+
+  replicas:
+    min: 1
+    max: 1
+    cpuThresholdPercentage: 50
+  liveness:
+    path: /actuator/health/liveness
+    initialDelay: 60
+    timeout: 10
+  readiness:
+    path: /actuator/health/readiness
+    initialDelay: 60
+    timeout: 10
+  resources:
+    limits:
+      memory: 768Mi
+    requests:
+      cpu: 200m
+      memory: 512Mi
+  prometheus:
+    enabled: true
+    path: /actuator/prometheus
+  kafka:
+    pool: nav-dev
+
+  accessPolicy:
+    inbound:
+      rules: [ ]
+    outbound:
+      external: [ ]
