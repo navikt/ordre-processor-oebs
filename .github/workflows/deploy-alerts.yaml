@@ -1,0 +1,31 @@
+name: Deploy alerts for ordre-processor-oebs-t1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .nais/alertconfig-dev.yaml
+      - .nais/prometheusrule-dev.yaml
+      - .github/workflows/deploy-alerts.yaml
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-alerts-ordre-processor-oebs-t1
+  cancel-in-progress: false
+
+jobs:
+  deploy-dev:
+    name: Deploy alerts to dev-gcp
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - name: Deploy alerts to dev-gcp
+        uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/alertconfig-dev.yaml,.nais/prometheusrule-dev.yaml
