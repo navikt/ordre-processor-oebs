@@ -11,6 +11,8 @@ spec:
   image: {{ image }}
   port: 8080
 
+  ttl: 7m
+
   envFrom:
     - secret: dependabot-oebs-t1
     - secret: ordre-processor-oebs-dependabott-oracle
