@@ -21,8 +21,8 @@ spring:
     name : oebs-processor-oebs
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    username: ${OEBS_USERNAME}
-    password: ${OEBS_PASSWORD}
+    username: ${OEBS_DB_USERNAME}
+    password: ${OEBS_DB_PASSWORD}
     url: ${ORACLE_URL}
   jpa:
     hibernate:
