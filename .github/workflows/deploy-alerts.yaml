@@ -23,9 +23,9 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Deploy alerts to dev-gcp
-        uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
+        uses: nais/deploy/actions/deploy@3944168fd20b7eea3818e97de3810f74b54c78ff
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/alertconfig-dev.yaml,.nais/prometheusrule-dev.yaml
