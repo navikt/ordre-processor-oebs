@@ -13,7 +13,7 @@ spec:
 
   envFrom:
     - secret: dependabot-oebs-t1
-    - secret: ordre-processor-oebs-dependabot-oracle
+    - secret: ordre-processor-oebs-dependabott-oracle
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: gcp
