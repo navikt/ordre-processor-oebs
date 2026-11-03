@@ -39,6 +39,11 @@ public class Listener {
         // Hopp over meldingen ved å legge til exceptionen i listen over ikke-retryable exceptions i errorHandler() i KafkaConfig.java
 
 
+        //todo: Legge til artikler for ordre, sette inn lopende.
+        //todo: hente nextval.
+        //todo: En id i artikler som viser til id i artiklers
+
+
         ordreService.createOrdre(ordre, correlationId, systemId);
 
     }

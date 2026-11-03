@@ -15,8 +15,6 @@ spec:
     - secret: ordre-processor-oebs-u1
     - secret: ordre-processor-oebs-u1-oracle
   env:
-    - name: SPRING_PROFILES_ACTIVE
-      value: gcp
     - name: ORDRE_TOPIC
       value: team-oebs.ordre-oebs-u1.v1
 
