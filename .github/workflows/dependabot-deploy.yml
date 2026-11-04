@@ -51,7 +51,7 @@ jobs:
 
       - name: Deploy to dedicated dependabot workload
         if: github.event.pull_request.user.login == 'dependabot[bot]'
-        uses: nais/deploy/actions/deploy@1064e26587ab2794266a35f477387e561899a7ef
+        uses: nais/deploy/actions/deploy@7b60caaded00332e9aa117a8342daa0876851dfe
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/nais-dependabot.yaml
