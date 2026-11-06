@@ -53,7 +53,7 @@ class ListenerIntegrationTest {
                 .setFormidlerNavn("Test Formidler")
                 .setSaksNummer("SAK-001")
                 .setArtikler(List.of())
-                .setLeveringsInfo("Testlevering")
+                .setForsendelsesInstruksjoner("Testlevering")
                 .build();
 
         var message = MessageBuilder.withPayload(ordre)
