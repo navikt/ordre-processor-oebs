@@ -4,6 +4,7 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.ordre.Ordre;
+import no.nav.ordre.processor.oebs.exception.InvalidOrdreException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.Header;
@@ -69,7 +70,8 @@ public class KafkaConfig {
 
         handler.addNotRetryableExceptions(
                 DeserializationException.class,
-                IllegalArgumentException.class
+                IllegalArgumentException.class,
+                InvalidOrdreException.class
         );
 
         handler.setRetryListeners((consumerRecord, ex, attempt) ->
