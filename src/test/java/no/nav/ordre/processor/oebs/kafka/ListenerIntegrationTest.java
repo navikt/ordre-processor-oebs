@@ -49,9 +49,9 @@ class ListenerIntegrationTest {
     @Test
     void shouldDeserializeAndConsumeOrder() throws Exception {
         var ordre = Ordre.newBuilder()
-                .setFodselNummer("01010050000") // syntetisk fødselsnummer
+                .setFnr("01010050000") // syntetisk fødselsnummer
                 .setFormidlerNavn("Test Formidler")
-                .setSaksNummer("SAK-001")
+                .setSaksnummer("SAK-001")
                 .setArtikler(List.of())
                 .setForsendelsesInstruksjoner("Testlevering")
                 .build();
@@ -59,7 +59,7 @@ class ListenerIntegrationTest {
         var message = MessageBuilder.withPayload(ordre)
                 .setHeader(KafkaHeaders.TOPIC, "team-oebs.oebs-ordre.v1")
                 .setHeader("x-correlation-id", "test-correlation-id")
-                .setHeader("systemid", "test-system")
+                .setHeader("system", "test-system")
                 .build();
 
         kafkaTemplate.send(message).get(10, SECONDS);

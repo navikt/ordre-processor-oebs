@@ -17,22 +17,22 @@ public class OrdreService {
     public void createOrdre(Ordre ordre, String correlationid, String systemId) {
         if (!"BESTILLING".equals(ordre.getOrdreType())) {
             log.warn("Order rejected. saksnummer={} korrelasjonsid={} system={} reason=Invalid ordreType ordreType={}",
-                    ordre.getSaksNummer(), correlationid, systemId, ordre.getOrdreType());
+                    ordre.getSaksnummer(), correlationid, systemId, ordre.getOrdreType());
             throw new InvalidOrdreException("Invalid ordreType. Expected BESTILLING.");
         }
 
-        if (ordre.getFodselNummer() == null || !ordre.getFodselNummer().matches("\\d{11}")) {
+        if (ordre.getFnr() == null || !ordre.getFnr().matches("\\d{11}")) {
             log.warn("Order rejected. saksnummer={} korrelasjonsid={} system={} reason=Invalid fodselNummer format",
-                    ordre.getSaksNummer(), correlationid, systemId);
+                    ordre.getSaksnummer(), correlationid, systemId);
             throw new InvalidOrdreException("Invalid fodselNummer format. Expected exactly 11 digits.");
         }
 
         ordreJpaRepository.insertOrdre(
                 systemId,
-                ordre.getFodselNummer(),
+                ordre.getFnr(),
                 ordre.getFormidlerNavn(),
                 ordre.getOrdreType(),
-                ordre.getSaksNummer(),
+                ordre.getSaksnummer(),
                 ordre.getForsendelsesInstruksjoner(),
                 ordre.getArtikler().toString(), //todo: endre til å gjøre kall mot artikkel
                 correlationid

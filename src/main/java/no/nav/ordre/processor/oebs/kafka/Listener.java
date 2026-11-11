@@ -25,13 +25,13 @@ public class Listener {
     @KafkaListener(id = "ordrelistener", topics = "${spring.kafka.ordre-topic}")
     public void listen(@Payload Ordre ordre,
                        @Header(name = "x-correlation-id", required = false) String correlationId,
-                       @Header(name = "systemid", required = false) String systemId) {
+                       @Header(name = "system", required = false) String systemId) {
         logger.info("Received message. saksnummer={} korrelasjonsid={} systemid={}",
-                ordre.getSaksNummer(), correlationId, systemId);
+                ordre.getSaksnummer(), correlationId, systemId);
 
         //Hvis correlasjonsId eller systemId ikke er satt, så hoppes meldingen over.
         if (correlationId == null || systemId == null) {
-            logger.warn("Message with saksnummer {} is ignored. Missing header x-correlation-id {} or systemId {}.", ordre.getSaksNummer(), correlationId, systemId);
+            logger.warn("Message with saksnummer {} is ignored. Missing header x-correlation-id {} or systemId {}.", ordre.getSaksnummer(), correlationId, systemId);
             return;
         }
 
