@@ -86,7 +86,7 @@ public class KafkaConfig {
      */
     private static String safeDescription(ConsumerRecord<?, ?> consumerRecord) {
         String saksnummer = consumerRecord.value() instanceof Ordre ordre
-                ? String.valueOf(ordre.getSaksNummer())
+                ? String.valueOf(ordre.getSaksnummer())
                 : null;
         return String.format("offset=%d korrelasjonsid=%s systemid=%s saksnummer=%s",
                 consumerRecord.offset(),
