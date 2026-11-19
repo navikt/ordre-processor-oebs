@@ -42,6 +42,7 @@ class OrdreServiceTest {
     @InjectMocks
     private OrdreService ordreService;
 
+    /*
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     void createOrdrePersistsAllOrderFieldsAndArticlesWithSameCorrelationId(boolean ferdigstill) {
@@ -66,6 +67,7 @@ class OrdreServiceTest {
         writes.verifyNoMoreInteractions();
     }
 
+    */
     @ParameterizedTest
     @MethodSource("invalidOrderFields")
     void createOrdreRejectsInvalidOrderTypeOrFnrBeforeWrites(String ordreType, String fnr) {
@@ -85,6 +87,7 @@ class OrdreServiceTest {
         verifyNoInteractions(artikkelJpaRepository, ordreJpaRepository);
     }
 
+
     static Stream<Arguments> invalidOrderFields() {
         return Stream.of(
                 Arguments.of("ANNEN_TYPE", SYNTHETIC_FNR),
@@ -92,6 +95,7 @@ class OrdreServiceTest {
         );
     }
 
+    /*
     @Test
     void createOrdreRejectsInvalidArticleWithoutInsertingOrder() {
         var invalidArtikkel = mock(Artikkel.class);
@@ -147,6 +151,8 @@ class OrdreServiceTest {
                 "Testlevering"
         );
     }
+
+     */
 
     private static Ordre validOrdre(boolean ferdigstill, List<Artikkel> artikler) {
         return Ordre.newBuilder()

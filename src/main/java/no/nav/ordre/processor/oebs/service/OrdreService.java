@@ -31,6 +31,12 @@ public class OrdreService {
             throw new InvalidOrdreException("Invalid fodselNummer format. Expected exactly 11 digits.");
         }
 
+        //todo: Slette nar digihot switcher til å sende ordre via kafka og ikke via gammel løsning
+        if (ordre != null)  {
+            log.info("Not saving ordre to database. saksnummer={} korrelasjonsid={} system={}", ordre.getSaksnummer(), correlationid, systemId);
+            return;
+        }
+
         ordre.getArtikler().forEach(
                 artikkel -> {
                     if (artikkel.getArtikkelnummer() == null || artikkel.getAntall() == null) {
