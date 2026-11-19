@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.ordre.Ordre;
 import no.nav.ordre.processor.oebs.exception.InvalidOrdreException;
+import no.nav.ordre.processor.oebs.repository.ArtikkelJpaRepository;
 import no.nav.ordre.processor.oebs.repository.OrdreJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 public class OrdreService {
 
     private final OrdreJpaRepository ordreJpaRepository;
+    private final ArtikkelJpaRepository artikkelJpaRepository;
 
+    @Transactional
     public void createOrdre(Ordre ordre, String correlationid, String systemId) {
         if (!"BESTILLING".equals(ordre.getOrdreType())) {
             log.warn("Order rejected. saksnummer={} korrelasjonsid={} system={} reason=Invalid ordreType ordreType={}",
@@ -33,17 +37,30 @@ public class OrdreService {
             return;
         }
 
+        ordre.getArtikler().forEach(
+                artikkel -> {
+                    if (artikkel.getArtikkelnummer() == null || artikkel.getAntall() == null) {
+                        log.warn("Order rejected. saksnummer={} korrelasjonsid={} system={} reason=Invalid artikkel data artikkelNummer={} antall={}",
+                                ordre.getSaksnummer(), correlationid, systemId, artikkel.getArtikkelnummer(), artikkel.getAntall());
+                        throw new InvalidOrdreException("Invalid artikkel data. Artikkelnummer and Antall must be valid.");
+                    }
+                    artikkelJpaRepository.insertArtikkel(
+                            correlationid,
+                            artikkel.getArtikkelnummer(),
+                            artikkel.getAntall()
+                    );
+                }
+        );
         ordreJpaRepository.insertOrdre(
+                correlationid,
                 systemId,
                 ordre.getFnr(),
-                ordre.getFormidlerNavn(),
                 ordre.getOrdreType(),
                 ordre.getSaksnummer(),
-                ordre.getForsendelsesInstruksjoner(),
-                ordre.getArtikler().toString(), //todo: endre til å gjøre kall mot artikkel
-                correlationid
+                ordre.getFormidlerNavn(),
+                ordre.getFerdigstill().toString(),
+                ordre.getForsendelsesInstruksjoner()
                 );
     }
 
-    //todo: Prøve å endre til å benytte artikler som en egen tabell
 }

@@ -1,6 +1,7 @@
 package no.nav.ordre.processor.oebs.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import no.nav.oebs.ordre.Artikkel;
 import no.nav.oebs.ordre.Ordre;
 import no.nav.ordre.processor.oebs.config.KafkaConfig;
 import no.nav.ordre.processor.oebs.service.OrdreService;
@@ -52,7 +53,18 @@ class ListenerIntegrationTest {
                 .setFnr("01010050000") // syntetisk fødselsnummer
                 .setFormidlerNavn("Test Formidler")
                 .setSaksnummer("SAK-001")
-                .setArtikler(List.of())
+                .setOrdreType("BESTILLING")
+                .setFerdigstill(true)
+                .setArtikler(List.of(
+                        Artikkel.newBuilder()
+                                .setArtikkelnummer("ART-101")
+                                .setAntall("2")
+                                .build(),
+                        Artikkel.newBuilder()
+                                .setArtikkelnummer("ART-202")
+                                .setAntall("7")
+                                .build()
+                ))
                 .setForsendelsesInstruksjoner("Testlevering")
                 .build();
 
