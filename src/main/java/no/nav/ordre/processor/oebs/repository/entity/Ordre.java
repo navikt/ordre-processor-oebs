@@ -13,43 +13,46 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "staging_xxrtv_oe_digihot_ordre", schema = "XXRTV")
+@Table(name = "XXRTV_OE_DIGIHOT_ORDRE_STAGING", schema = "XXRTV")
 public class Ordre {
 
     @Id
     @Column(name= "KORRELASJONSID")
     private String korrelasjonsId;
 
-    @Column(name= "SYSTEMID")
+    @Column(name= "SYSTEM")
     private String systemId;
 
-    @Column(name = "FODSELSNUMMER")
+    @Column(name = "FNR")
     private String fnr;
-
-    @Column(name = "ORDRETYPE") //todo: Er det bare "BESTILLING" som skal settes her?
-    private String ordreType;
 
     @Column(name = "FORMIDLERNAVN")
     private String formidlerNavn;
 
+    @Column(name = "ORDRETYPE")
+    private String ordreType;
+
     @Column(name = "SAKSNUMMER")
     private String saksnummer;
 
-    @Column(name = "ARTIKLER", columnDefinition = "CLOB")
-    private String artikler;
-
-    @Column(name = "LEVERINGINFO")
+    @Column(name = "FORSENDELSESINSTRUKSER")
     private String leveringsinfo;
 
-    @Column(name = "FERDIGSTILT")
+    @Column(name = "FERDIGSTILL")
     private String ferdigstilt;
 
-    @Column(name = "STATUS")
-    private String status;
-
     @Column(name = "ORDRENUMMER")
-    private LocalDateTime ordrenummer;
+    private String ordrenummer;
 
-    @Column(name = "HENTEKVITTERING")
-    private String hentekvittering;
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
+    @Column(name = "CREATION_DATE")
+    private LocalDateTime creationDate;
+
+    @Column(name = "LAST_UPDATED_BY")
+    private String lastUpdatedBy;
+
+    @Column(name = "LAST_UPDATE_DATE")
+    private LocalDateTime lastUpdateDate;
 }
